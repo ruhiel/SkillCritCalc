@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>スキル会心率計算</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 50%;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h2>スキル会心率計算</h2>
+    <label for="weaponCrit">武器会心率: </label>
+    <input type="number" id="weaponCrit" min="0" max="100" value="0" onchange="calculate()">%
+    <table id="skillTable">
+        <tr>
+            <th>スキル名</th>
+            <th>Lv</th>
+            <th>会心率</th>
+            <th>削除</th>
+        </tr>
+    </table>
+    <button onclick="addSkillRow()">追加</button>
+    <h3>会心率: <span id="total">0</span>%</h3>
+    <h3 id="effectiveContainer" style="display: none;">会心率（有効部位）: <span id="effective">0</span>%</h3>
+    <h3 id="woundContainer" style="display: none;">会心率（傷口）: <span id="wound">0</span>%</h3>
+    <script>
+        const skillData = {
+            "見切り": { 1: 4, 2: 8, 3: 12, 4: 16, 5: 20 },
+            "挑戦者": { 1: 3, 2: 5, 3: 7, 4: 10, 5: 15 },
+            "渾身": { 1: 10, 2: 20, 3: 30 },
+            "力の解放": { 1: 10, 2: 20, 3: 30, 4: 40, 5: 50 },
+            "攻勢": { 1: 0, 2: 5, 3: 10, 4: 15, 5: 20 },
+            "無我の境地": { 1: 3, 2: 6, 3: 10 },
+            "弱点特効": {
+                1: { effective: 10, wound: 15 },
+                2: { effective: 15, wound: 20 },
+                3: { effective: 20, wound: 25 },
+                4: { effective: 25, wound: 30 },
+                5: { effective: 30, wound: 50 }
+            }
+        };
+
+        function addSkillRow() {
+            let table = document.getElementById("skillTable");
+            let rowIndex = table.rows.length;
+            let row = table.insertRow();
+            
+            let skillCell = row.insertCell(0);
+            let levelCell = row.insertCell(1);
+            let critCell = row.insertCell(2);
+            let deleteCell = row.insertCell(3);
+            
+            skillCell.innerHTML = `
+                <select id="skill${rowIndex}" onchange="updateLevelDropdown(${rowIndex})">
+                    <option value="none">選択</option>
+                    ${Object.keys(skillData).map(skill => `<option value="${skill}">${skill}</option>`).join('')}
+                </select>
+            `;
+            
+            levelCell.innerHTML = `<select id="level${rowIndex}" onchange="calculate()"></select>`;
+            
+            critCell.id = `crit${rowIndex}`;
+            critCell.innerText = "0";
+            
+            deleteCell.innerHTML = `<button onclick="deleteRow(this)">削除</button>`;
+        }
+
+        function updateLevelDropdown(index) {
+            let skill = document.getElementById(`skill${index}`).value;
+            let levelSelect = document.getElementById(`level${index}`);
+            levelSelect.innerHTML = "";
+            
+            if (skillData[skill]) {
+                let maxLevel = Math.max(...Object.keys(skillData[skill]).map(Number));
+                for (let i = 0; i <= maxLevel; i++) {
+                    let option = document.createElement("option");
+                    option.value = i;
+                    option.text = i;
+                    levelSelect.appendChild(option);
+                }
+            }
+            calculate();
+        }
+
+        function deleteRow(button) {
+            let row = button.parentNode.parentNode;
+            row.parentNode.removeChild(row);
+            calculate();
+        }
+
+        function calculate() {
+            let weaponCrit = parseInt(document.getElementById("weaponCrit").value) || 0;
+            let totalCrit = weaponCrit;
+            let effectiveCrit = weaponCrit;
+            let woundCrit = weaponCrit;
+            let table = document.getElementById("skillTable");
+            let hasWeaknessExploit = false;
+            
+            for (let i = 1; i < table.rows.length; i++) {
+                let skill = document.getElementById(`skill${i}`)?.value;
+                let level = parseInt(document.getElementById(`level${i}`)?.value);
+                let critRate = skillData[skill]?.[level];
+                
+                if (skill === "弱点特効" && critRate) {
+                    hasWeaknessExploit = true;
+                    document.getElementById(`crit${i}`).innerText = `有効部位: ${critRate.effective}%, 傷口: ${critRate.wound}%`;
+                    effectiveCrit += critRate.effective;
+                    woundCrit += critRate.wound;
+                } else {
+                    critRate = critRate || 0;
+                    document.getElementById(`crit${i}`).innerText = critRate;
+                    totalCrit += critRate;
+                    effectiveCrit += critRate;
+                    woundCrit += critRate;
+                }
+            }
+            
+            document.getElementById("total").innerText = totalCrit;
+            document.getElementById("effective").innerText = effectiveCrit;
+            document.getElementById("wound").innerText = woundCrit;
+            
+            document.getElementById("effectiveContainer").style.display = hasWeaknessExploit ? "block" : "none";
+            document.getElementById("woundContainer").style.display = hasWeaknessExploit ? "block" : "none";
+        }
+
+        window.onload = function() {
+            addSkillRow();
+        };
+    </script>
+</body>
+</html>
