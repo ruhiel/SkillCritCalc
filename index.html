@@ -28,6 +28,10 @@
         <label for="weaponCrit">武器会心率: </label>
         <input type="number" id="weaponCrit" min="0" max="100" value="0" onchange="calculate()">%
     </div>
+    <div>
+        <input type="checkbox" id="dragonVirus" onchange="calculate()">
+        <label for="dragonVirus">狂竜症克服時 (+15%)</label>
+    </div>
     <table id="skillTable">
         <tr>
             <th>スキル名</th>
@@ -107,9 +111,10 @@
 
         function calculate() {
             let weaponCrit = parseInt(document.getElementById("weaponCrit").value) || 0;
-            let totalCrit = weaponCrit;
-            let effectiveCrit = weaponCrit;
-            let woundCrit = weaponCrit;
+            let dragonVirusBonus = document.getElementById("dragonVirus").checked ? 15 : 0;
+            let totalCrit = weaponCrit + dragonVirusBonus;
+            let effectiveCrit = weaponCrit + dragonVirusBonus;
+            let woundCrit = weaponCrit + dragonVirusBonus;
             let table = document.getElementById("skillTable");
             let hasWeaknessExploit = false;
             
