@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>スキル会心率計算</title>
+    <title>モンハンワイルズ スキル会心率計算機</title>
     <style>
         table {
             border-collapse: collapse;
@@ -14,12 +14,20 @@
             padding: 8px;
             text-align: center;
         }
+        .weaponCrit {
+            margin-bottom: 10px;
+        }
+        .addButton {
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
-    <h2>スキル会心率計算</h2>
-    <label for="weaponCrit">武器会心率: </label>
-    <input type="number" id="weaponCrit" min="0" max="100" value="0" onchange="calculate()">%
+    <h2>モンハンワイルズ スキル会心率計算機</h2>
+    <div class="weaponCrit">
+        <label for="weaponCrit">武器会心率: </label>
+        <input type="number" id="weaponCrit" min="0" max="100" value="0" onchange="calculate()">%
+    </div>
     <table id="skillTable">
         <tr>
             <th>スキル名</th>
@@ -28,7 +36,7 @@
             <th>削除</th>
         </tr>
     </table>
-    <button onclick="addSkillRow()">追加</button>
+    <button class="addButton" onclick="addSkillRow()">追加</button>
     <h3>会心率: <span id="total">0</span>%</h3>
     <h3 id="effectiveContainer" style="display: none;">会心率（有効部位）: <span id="effective">0</span>%</h3>
     <h3 id="woundContainer" style="display: none;">会心率（有効部位＆傷口）: <span id="wound">0</span>%</h3>
@@ -41,10 +49,10 @@
             "攻勢": { 1: 0, 2: 5, 3: 10, 4: 15, 5: 20 },
             "無我の境地": { 1: 3, 2: 6, 3: 10 },
             "弱点特効": {
-                1: { effective: 10, wound: 15 },
-                2: { effective: 15, wound: 20 },
-                3: { effective: 20, wound: 25 },
-                4: { effective: 25, wound: 30 },
+                1: { effective: 5, wound: 8 },
+                2: { effective: 10, wound: 15 },
+                3: { effective: 15, wound: 25 },
+                4: { effective: 20, wound: 35 },
                 5: { effective: 30, wound: 50 }
             }
         };
