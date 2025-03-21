@@ -31,7 +31,7 @@
     <button onclick="addSkillRow()">追加</button>
     <h3>会心率: <span id="total">0</span>%</h3>
     <h3 id="effectiveContainer" style="display: none;">会心率（有効部位）: <span id="effective">0</span>%</h3>
-    <h3 id="woundContainer" style="display: none;">会心率（傷口）: <span id="wound">0</span>%</h3>
+    <h3 id="woundContainer" style="display: none;">会心率（有効部位＆傷口）: <span id="wound">0</span>%</h3>
     <script>
         const skillData = {
             "見切り": { 1: 4, 2: 8, 3: 12, 4: 16, 5: 20 },
@@ -112,7 +112,7 @@
                 
                 if (skill === "弱点特効" && critRate) {
                     hasWeaknessExploit = true;
-                    document.getElementById(`crit${i}`).innerText = `有効部位: ${critRate.effective}%, 傷口: ${critRate.wound}%`;
+                    document.getElementById(`crit${i}`).innerText = `有効部位: ${critRate.effective}%, 有効部位＆傷口: ${critRate.wound}%`;
                     effectiveCrit += critRate.effective;
                     woundCrit += critRate.wound;
                 } else {
