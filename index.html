@@ -20,6 +20,9 @@
         .addButton {
             margin-top: 10px;
         }
+        h3 span {
+    		white-space: nowrap;
+		}
     </style>
 </head>
 <body>
@@ -41,10 +44,17 @@
         </tr>
     </table>
     <button class="addButton" onclick="addSkillRow()">追加</button>
-    <h3>会心率: <span id="total">0</span>%（期待値: <span id="expected">1.00</span>）</h3>
-    <h3 id="effectiveContainer" style="display: none;">会心率（有効部位）: <span id="effective">0</span>%<span id="effectiveExpectedContainer" style="display: none;">（期待値: <span id="effectiveExpected">1.00</span>）</span></h3>
-    <h3 id="woundContainer" style="display: none;">会心率（有効部位＆傷口）: <span id="wound">0</span>%<span id="woundExpectedContainer" style="display: none;">（期待値: <span id="woundExpected">1.00</span>）</span></h3>
-    
+	<h3>
+	  <span>会心率: <span id="total">0</span>%（期待値: <span id="expected">1.00</span>）</span>
+	</h3>
+
+	<h3 id="effectiveContainer" style="display: none;">
+	  <span>会心率（有効部位）: <span id="effective">0</span>%（期待値: <span id="effectiveExpected">1.00</span>）</span>
+	</h3>
+
+	<h3 id="woundContainer" style="display: none;">
+	  <span>会心率（有効部位＆傷口）: <span id="wound">0</span>%（期待値: <span id="woundExpected">1.00</span>）</span>
+	</h3>    
 
     <script>
         const skillData = {
